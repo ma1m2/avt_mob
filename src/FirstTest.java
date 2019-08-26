@@ -3,12 +3,14 @@ import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
 
 public class FirstTest {
     private AppiumDriver driver;
+
     @Before
     public void setUp() throws Exception{
         DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -28,7 +30,10 @@ public class FirstTest {
     }
     @Test
     public void firstTest(){
-        System.out.println("My first test");
+        WebElement elementToInitSearch = driver.findElementByXPath("//*[contains(@text,'Search Wikipedia')]");
+        elementToInitSearch.click();
+        WebElement elementToEnterSearchLine = driver.findElementByXPath("");
+        //System.out.println("My first test");
     }
 
 }
