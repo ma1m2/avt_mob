@@ -35,14 +35,17 @@ public class FirstTest {
     }
     @Test
     public void firstTest(){
-        WebElement elementToInitSearch = driver.findElementByXPath("//*[contains(@text,'Search Wikipedia')]");
-        elementToInitSearch.click();
-        WebElement elementToEnterSearchLine = waitForElementPresentByXpath(
-                "//*[contains(@text,'Search…')]",
-                "Cannot find Search input"
-                //, 5
+        waitForElementAndClick(
+                "//*[contains(@text,'Search Wikipedia')]",
+                "Cannot find 'Search Wikipedia' on page",
+                5
         );
-        elementToEnterSearchLine.sendKeys("Java");
+        waitForElementAndSendKey(
+                "//*[contains(@text,'Search…')]",
+                "Java",
+                "Cannot find Search input",
+                5
+        );
         waitForElementPresentByXpath(
                 "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"
                 ,  "Cannot find 'Object-oriented programming language' topic searching by java"
@@ -50,14 +53,24 @@ public class FirstTest {
         );
         System.out.println("Well done! Excellent!");
 }
-    private WebElement waitForElementPresentByXpath(String xpath, String errorMessage, long timeoutInSeconds){
+    private WebElement waitForElementPresentByXpath(String xPath, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
-        By by = By.xpath(xpath);
+        By by = By.xpath(xPath);
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
-    private WebElement waitForElementPresentByXpath(String xpath, String errorMessage){
-        return waitForElementPresentByXpath(xpath, errorMessage, 5);
+    private WebElement waitForElementPresentByXpath(String xPath, String errorMessage){
+        return waitForElementPresentByXpath(xPath, errorMessage, 5);
+    }
+    private WebElement waitForElementAndClick(String xPath, String errorMessage, long timeoutInSecond){
+        WebElement element = waitForElementPresentByXpath(xPath, errorMessage, timeoutInSecond);
+        element.click();
+        return element;
+    }
+    private WebElement waitForElementAndSendKey(String xPath, String value, String errorMessage, long timeoutInSecond){
+        WebElement element = waitForElementPresentByXpath(xPath, errorMessage, timeoutInSecond);
+        element.sendKeys(value);
+        return element;
     }
 
 }
