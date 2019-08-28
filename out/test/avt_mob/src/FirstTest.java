@@ -32,10 +32,12 @@ public class FirstTest {
     }
 
     //@Test
+    //Find locator 'Search Wikipedia' and click on it. Type "Java" and wait result 'Object-oriented programming language'.
+    //Find all elements by xPath
     public void firstTest(){
         waitForElementByXpathAndClick(
                 "//*[contains(@text,'Search Wikipedia')]",
-                "Cannot find 'Search Wikipedia' on page",
+                "Cannot find 'Search Wikipedia' input",
                 5
         );
         waitForElementByXpathAndSendKey(
@@ -46,33 +48,33 @@ public class FirstTest {
         );
         waitForElementPresentByXpath(
                 "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']",
-                "Cannot find 'Object-oriented programming language' topic searching by java",
+                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
                 15
         );
         System.out.println("Well done! Excellent!");
     }
-    @Test
+    //@Test
+    //Open app, click 'Search', click X, and check that we return on previous screen.
     public void testCancelSearchByXpath(){
         waitForElementByXpathAndClick(
                 "//*[contains(@text,'Search Wikipedia')]",
-                "Cannot find 'Search Wikipedia' on page",
+                "Cannot find 'Search Wikipedia' by xPath",
                 5
         );
         waitForElementByXpathAndClick(
                 "//*[@resource-id='org.wikipedia:id/search_close_btn']",
-                "Cannot find X-button by id to cancel Search",
+                "Cannot find X-button by xPath to cancel Search",
                 5
         );
         waitForElementNotPresentByXpath(
-                //"org.wikipedia:id/search_close_btn",
                 "//*[@resource-id='org.wikipedia:id/search_close_btn']",
-                "X-button by id is still present on the page",
+                "X-button by xPath is still present on the page",
                 5
         );
 
         System.out.println("Well done!");
     }
-    //@Test
+    @Test
     public void testCancelSearchById(){
         waitForElementByIdAndClick(
                 "org.wikipedia:id/search_container",
@@ -90,7 +92,9 @@ public class FirstTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         By by = By.xpath(xPath);
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
     }
     private WebElement waitForElementPresentByXpath(String xPath, String errorMessage){
         return waitForElementPresentByXpath(xPath, errorMessage, 5);
@@ -109,7 +113,9 @@ public class FirstTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         By by = By.id(id);
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
     }
     private WebElement waitForElementByIdAndClick(String id, String errorMessage, long timeoutInSecond){
         WebElement element = waitForElementPresentById(id, errorMessage, timeoutInSecond);
@@ -120,12 +126,16 @@ public class FirstTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         By by = By.id(id);
-        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+        return wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(by)
+        );
     }
     private boolean waitForElementNotPresentByXpath(String xPath, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         By by = By.xpath(xPath);
-        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+        return wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(by)
+        );
     }
 }
