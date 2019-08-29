@@ -31,7 +31,7 @@ public class FirstTest {
         driver.quit();
     }
 
-    //@Test
+    @Test
     //Find locator 'Search Wikipedia' and click on it. Type "Java" and wait result 'Object-oriented programming language'.
     //Find all elements by xPath
     public void firstTest(){
@@ -51,31 +51,11 @@ public class FirstTest {
                 "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
                 15
         );
-        System.out.println("Well done! Excellent!");
-    }
-    //@Test
-    //Open app, click 'Search', click X, and check that we return on previous screen.
-    public void testCancelSearchByXpath(){
-        waitForElementByXpathAndClick(
-                "//*[contains(@text,'Search Wikipedia')]",
-                "Cannot find 'Search Wikipedia' by xPath",
-                5
-        );
-        waitForElementByXpathAndClick(
-                "//*[@resource-id='org.wikipedia:id/search_close_btn']",
-                "Cannot find X-button by xPath to cancel Search",
-                5
-        );
-        waitForElementNotPresentByXpath(
-                "//*[@resource-id='org.wikipedia:id/search_close_btn']",
-                "X-button by xPath is still present on the page",
-                5
-        );
-
-        System.out.println("Well done!");
+        System.out.println("Well done firstTest! Excellent!");
     }
     @Test
-    public void testCancelSearchById(){
+    //Open app, click 'Search', click X, and check that we return on previous screen.
+    public void testCancelSearch(){
         waitForElementByIdAndClick(
                 "org.wikipedia:id/search_container",
                 "Cannot find 'Search Wikipedia' by id",
@@ -86,6 +66,12 @@ public class FirstTest {
                 "Cannot find X-button by id to cancel Search",
                 5
         );
+        waitForElementNotPresentById(
+                "org.wikipedia:id/search_close_btn",
+                "X-button by ID is still present on the page",
+                5
+        );
+        System.out.println("Well done testCancelSearch!");
     }
 
     private WebElement waitForElementPresentByXpath(String xPath, String errorMessage, long timeoutInSeconds){
@@ -126,14 +112,6 @@ public class FirstTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         By by = By.id(id);
-        return wait.until(
-                ExpectedConditions.invisibilityOfElementLocated(by)
-        );
-    }
-    private boolean waitForElementNotPresentByXpath(String xPath, String errorMessage, long timeoutInSeconds){
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(errorMessage + "\n");
-        By by = By.xpath(xPath);
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
