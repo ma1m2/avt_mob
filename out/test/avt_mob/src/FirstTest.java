@@ -1,6 +1,7 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -31,9 +32,7 @@ public class FirstTest {
         driver.quit();
     }
 
-    @Test
-    //Find locator 'Search Wikipedia' and click on it. Type "Java" and wait result 'Object-oriented programming language'.
-    //Find all elements by xPath
+    //@Test //Find locator 'Search Wikipedia' and click on it. Type "Java" and wait result 'Object-oriented programming language'.
     public void firstTestByXpath(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -53,8 +52,7 @@ public class FirstTest {
         );
         System.out.println("Well done firstTest! Excellent!");
     }
-    @Test
-    //Open app, click 'Search', click X, and check that we return on previous screen.
+    //@Test //Open app, click 'Search', click X, and check that we return on previous screen.
     public void testCancelSearchById(){
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
@@ -74,8 +72,7 @@ public class FirstTest {
         System.out.println("Well done testCancelSearch!");
     }
 
-    @Test
-    //Clear element from the information that was filled in before
+    //@Test //Clear element from the information that was filled in before
     public void testClearSearch(){
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
@@ -103,7 +100,39 @@ public class FirstTest {
                 "X-button by ID is still present on the page",
                 5
         );
-        System.out.println("Well done testClearSearch!");
+        System.out.println("Well done! The testClearSearch has been passed successfully!");
+    }
+
+    @Test
+    public void testCompareArticleTitle(){
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Java",
+                "Cannot find Search input",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+                15
+        );
+        WebElement titleElement =  waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find a title of the article",
+                15
+        );
+        String articleTitle = titleElement.getAttribute("text");
+        Assert.assertEquals(
+                "We see unexpected title",
+                "Java (programming language)",
+                articleTitle
+        );
+        System.out.println("Well done! The testCompareArticleTitle has been passed successfully!");
     }
 
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
