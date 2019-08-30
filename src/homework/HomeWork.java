@@ -13,6 +13,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeWork {
     private AppiumDriver driver;
@@ -56,7 +59,7 @@ public class HomeWork {
 
     }
 
-    @Test//Find text “Search…” in field and compare with expected result
+    //@Test//Find text “Search…” in field and compare with expected result
     public void testEx3(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -116,7 +119,35 @@ public class HomeWork {
         );
         System.out.println("Well done! The testEx3 has been passed successfully!");
     }
-
+    @Test//Find list of elements by id
+    public void testEx4(){
+        List <WebElement> elements = new ArrayList<>();
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        //search some word
+        waitForElementAndSendKey(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Apple",
+                "Cannot find Search input",
+                5
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find a title item 'Apple'",
+                10
+        );
+        //pick up all found elements
+        elements = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
+        System.out.println("Number of elements on a page = " + elements.size());
+        for(WebElement element:elements){
+            String str = element.getAttribute("text");
+            System.out.println(str);
+            Assert.assertEquals("We see unexpected text on a page","Apple",str.substring(0,5));
+        }
+    }
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
