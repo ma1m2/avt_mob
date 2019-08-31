@@ -1,10 +1,12 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -103,7 +105,7 @@ public class FirstTest {
         System.out.println("Well done! The testClearSearch has been passed successfully!");
     }
 
-    @Test
+    //@Test
     public void testCompareArticleTitle(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -133,6 +135,36 @@ public class FirstTest {
                 articleTitle
         );
         System.out.println("Well done! The testCompareArticleTitle has been passed successfully!");
+    }
+    @Test
+    public void testSwipeArticleTitle(){
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Appium",
+                "Cannot find Search input",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Appium']"),
+                "Cannot find 'Appium' in search",
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find a title of the article",
+                15
+        );
+        swipeUpToFindElement(
+                By.xpath("//*[@text='View page in browser']"),
+                "Cannot find the end of the article 'Appium'",
+                20
+        );
+        System.out.println("Well done! The testSwipeArticleTitle has been passed successfully!");
     }
 
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
@@ -167,5 +199,27 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.clear();
         return element;
+    }
+    protected void swipeUp(int timeOfSwipe){
+        TouchAction action = new TouchAction(driver);
+        Dimension size = driver.manage().window().getSize();
+        int x = size.width/2;
+        int startY = (int) (size.height*0.8);//at the bottom of screen
+        int endY = (int) (size.height*0.2);//at the top of screen
+        action.press(x, startY).waitAction(timeOfSwipe).moveTo(x, endY).release().perform();
+    }
+    protected void swipeUpQuick(){
+        swipeUp(200);
+    }
+    protected void swipeUpToFindElement(By by, String errorMessage, int maxSwipe){
+        int alreadySwipe = 0;
+        while (driver.findElements(by).size()==0){
+            if(alreadySwipe > maxSwipe){
+                waitForElementPresent(by, "Cannot find element by swiping Up. \n" + errorMessage,0);
+                return;
+            }
+            swipeUpQuick();
+            alreadySwipe++;
+        }
     }
 }

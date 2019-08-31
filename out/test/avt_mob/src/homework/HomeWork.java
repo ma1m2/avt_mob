@@ -145,7 +145,7 @@ public class HomeWork {
         for(WebElement element:elements){
             String str = element.getAttribute("text");
             System.out.println(str);
-            Assert.assertEquals("We see unexpected text on a page","Apple1",str.substring(0,5));
+            Assert.assertEquals("We see unexpected text on a page","Apple",str.substring(0,5));
         }
     }
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
