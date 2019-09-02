@@ -310,7 +310,7 @@ public class FirstTest {
         System.out.println("Well done! The testAmountOfEmptySearch has been passed successfully!");
     }
 
-    @Test
+    //@Test
     public void testChangeScreenOrientationOnSearchResult(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -360,6 +360,34 @@ public class FirstTest {
                 titleAfterSecondRotation
         );
         System.out.println("Well done! The testChangeScreenOrientationOnSearchResult has been passed successfully!");
+    }
+
+    @Test
+    public void testCheckSearchArticleInBackground(){
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Java",
+                "Cannot find Search input",
+                5
+        );
+        waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+                15
+        );
+        driver.runAppInBackground(2);
+        waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' after returning from background",
+                15
+        );
+
+        System.out.println("Well done! The testCheckSearchArticleInBackground has been passed successfully!");
     }
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
