@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -249,7 +250,7 @@ public class FirstTest {
         System.out.println("Well done! The testSaveArticleToMyList has been passed successfully!");
     }
 
-    @Test
+    //@Test
     public void testAmountOfNotEmptySearch(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -270,14 +271,43 @@ public class FirstTest {
                 15
         );
         int amountOfSearchResult = getAmountOfElements(By.xpath(searchResultLocator));
+        System.out.println("Number of elements on a page = " + amountOfSearchResult);
         Assert.assertTrue(
-                "Result of searching isn't > 0",
+                "We didn't find any result",
                 amountOfSearchResult > 0
         );
 
         System.out.println("Well done! The testAmountOfNotEmptySearch has been passed successfully!");
     }
+    @Test
+    public void testAmountOfEmptySearch() throws InterruptedException {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        String searchLine = "zxcvbnmasd";//zxcvbnmasd
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                searchLine,
+                "Cannot find Search input",
+                5
+        );
+        String searchResultLocator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
+        String emptyResultLabel = "//*[@text='No results found']";
+        TimeUnit.SECONDS.sleep(10);
+        assertElementNotPresent(
+                By.xpath(searchResultLocator),
+                "We've found some results by the request: " + searchLine
+        );
+        waitForElementPresent(
+                By.xpath(emptyResultLabel),
+                "Cannot find empty result label by the request: " + searchLine,
+                15
+        );
 
+        System.out.println("Well done! The testAmountOfEmptySearch has been passed successfully!");
+    }
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -358,5 +388,13 @@ public class FirstTest {
     private int getAmountOfElements(By by){
         List elements = driver.findElements(by);
         return elements.size();
+    }
+    private void assertElementNotPresent(By by, String errorMessage){
+        int amountOfElement = getAmountOfElements(by);
+        System.out.println("Number of elements on a page = " + amountOfElement);
+        if(amountOfElement > 0){
+            String defaultMessage = "An element '" + by.toString() + "' support to be not present";
+            throw new AssertionError(defaultMessage + " " + errorMessage);
+        }
     }
 }
