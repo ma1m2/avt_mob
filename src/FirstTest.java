@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -167,7 +168,7 @@ public class FirstTest {
         System.out.println("Well done! The testSwipeArticleTitle has been passed successfully!");
     }
 
-    @Test
+    //@Test
     public void testSaveArticleToMyList(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -248,6 +249,35 @@ public class FirstTest {
         System.out.println("Well done! The testSaveArticleToMyList has been passed successfully!");
     }
 
+    @Test
+    public void testAmountOfNotEmptySearch(){
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        String searchLine = "Linkin Park discography";
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                searchLine,
+                "Cannot find Search input",
+                5
+        );
+        String searchResultLocator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
+        waitForElementPresent(
+                By.xpath(searchResultLocator),
+                "Cannot find cannot find anything by request: '" + searchLine + "'",
+                15
+        );
+        int amountOfSearchResult = getAmountOfElements(By.xpath(searchResultLocator));
+        Assert.assertTrue(
+                "Result of searching isn't > 0",
+                amountOfSearchResult > 0
+        );
+
+        System.out.println("Well done! The testAmountOfNotEmptySearch has been passed successfully!");
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -302,6 +332,7 @@ public class FirstTest {
         while (driver.findElements(by).size()==0){
             if(alreadySwipe > maxSwipe){
                 waitForElementPresent(by, "Cannot find element by swiping Up. \n" + errorMessage,0);
+                System.out.println("Cannot find element by swiping Up. \n" + errorMessage);
                 return;
             }
             swipeUpQuick();
@@ -323,5 +354,9 @@ public class FirstTest {
                 .moveTo(leftX, middleY)
                 .release()
                 .perform();
+    }
+    private int getAmountOfElements(By by){
+        List elements = driver.findElements(by);
+        return elements.size();
     }
 }
