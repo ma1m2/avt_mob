@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class HomeWork {
     private AppiumDriver driver;
@@ -119,7 +120,7 @@ public class HomeWork {
         );
         System.out.println("Well done! The testEx3 has been passed successfully!");
     }
-    @Test//Find list of elements by id
+    //@Test//Find list of elements by id
     public void testEx4(){
         List <WebElement> elements = new ArrayList<>();
         waitForElementAndClick(
@@ -148,6 +149,44 @@ public class HomeWork {
             Assert.assertEquals("We see unexpected text on a page","Apple",str.substring(0,5));
         }
     }
+
+    //@Test//Ex5
+    public void testSaveTwoArticleIntoOneFolder(){
+
+    }
+
+    @Test//Ex6
+    public void testAssertTitle() throws InterruptedException {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        String searchLine = "Java";
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                searchLine,
+                "Cannot find Search input",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic searching by " + searchLine,
+                15
+        );
+
+        TimeUnit.SECONDS.sleep(5);
+        String titleXpath = "//*[@resource-id='org.wikipedia:id/view_page_header_container']/*[@text='Java (programming language)']";
+
+        assertElementPresent(
+                By.xpath(titleXpath),
+                "Cannot find title by request " + searchLine
+        );
+
+        System.out.println("Well done! The testAssertTitle has been passed successfully!");
+    }
+
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -171,5 +210,17 @@ public class HomeWork {
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
+    }
+    private int getAmountOfElements(By by){
+        List elements = driver.findElements(by);
+        return elements.size();
+    }
+    private void assertElementPresent(By by, String errorMessage){
+        int amountOfElement = getAmountOfElements(by);
+        System.out.println("Number of elements on a page = " + amountOfElement);
+        if(amountOfElement == 0){
+            String defaultMessage = "An element '" + by.toString() + "' isn't present";
+            throw new AssertionError(defaultMessage + " " + errorMessage);
+        }
     }
 }

@@ -108,7 +108,7 @@ public class FirstTest {
         System.out.println("Well done! The testClearSearch has been passed successfully!");
     }
 
-    //@Test
+    //@Test//2_
     public void testCompareArticleTitle(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -139,7 +139,7 @@ public class FirstTest {
         );
         System.out.println("Well done! The testCompareArticleTitle has been passed successfully!");
     }
-    //@Test
+    @Test//3_01_02
     public void testSwipeArticleTitle(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -170,7 +170,7 @@ public class FirstTest {
         System.out.println("Well done! The testSwipeArticleTitle has been passed successfully!");
     }
 
-    //@Test
+    //@Test//3_03
     public void testSaveArticleToMyList(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -251,7 +251,7 @@ public class FirstTest {
         System.out.println("Well done! The testSaveArticleToMyList has been passed successfully!");
     }
 
-    //@Test
+    //@Test//3_05
     public void testAmountOfNotEmptySearch(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -280,7 +280,7 @@ public class FirstTest {
 
         System.out.println("Well done! The testAmountOfNotEmptySearch has been passed successfully!");
     }
-    //@Test
+    //@Test//3_06
     public void testAmountOfEmptySearch() throws InterruptedException {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -310,7 +310,7 @@ public class FirstTest {
         System.out.println("Well done! The testAmountOfEmptySearch has been passed successfully!");
     }
 
-    //@Test
+    //@Test//3_07
     public void testChangeScreenOrientationOnSearchResult(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -362,7 +362,7 @@ public class FirstTest {
         System.out.println("Well done! The testChangeScreenOrientationOnSearchResult has been passed successfully!");
     }
 
-    @Test
+    //@Test//3_08
     public void testCheckSearchArticleInBackground(){
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -389,6 +389,7 @@ public class FirstTest {
 
         System.out.println("Well done! The testCheckSearchArticleInBackground has been passed successfully!");
     }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
