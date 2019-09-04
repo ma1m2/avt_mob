@@ -1,6 +1,7 @@
 package homework;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Assert;
@@ -150,12 +151,154 @@ public class HomeWork {
         }
     }
 
-    //@Test//Ex5
-    public void testSaveTwoArticleIntoOneFolder(){
+    @Test//Ex5
+    public void testSaveTwoArticleIntoOneFolder() throws InterruptedException {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        String searchLine = "Android";
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                searchLine,
+                "Cannot find Search input:'" + searchLine + "'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Open-source operating system for mobile devices created by Google']"),
+                "Cannot find 'Open-source operating system for mobile devices created by Google' topic searching by " + searchLine,
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find a title of the article",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find button to open article options",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find option to add article to reading list",
+                5
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/onboarding_button"),
+                "Cannot find 'GOT IT' tip overlay",
+                5
+        );
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/text_input"),
+                "Cannot find input to set name of article folder",
+                5
+        );
+        waitForElementAndSendKey(
+                By.id("org.wikipedia:id/text_input"),
+                "ReadLater",
+                "Cannot find input to set name 'Learning programming'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='OK']"),
+                "Cannot press 'OK' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "",
+                5
+        );
+        //1.Save the second article into the same folder 'ReadLater'
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKey(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                searchLine,
+                "Cannot find Search input:'" + searchLine + "'",
+                5
+        );
+        String itemTitle = "//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Android version history']";
+        waitForElementAndClick(
+                By.xpath(itemTitle),
+                "Cannot find 'Android version history' topic searching by " + searchLine,
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find a title of the article 'Android version history' by xPath " + itemTitle,
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find button to open article options",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find option to add article to reading list",
+                5
+        );
+        String folderXpath = "//*[@resource-id='org.wikipedia:id/item_title'][@text='ReadLater']";
+        waitForElementAndClick(
+                By.xpath(folderXpath),
+                "Cannot find 'ReadLater' folder by '" + folderXpath + "'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+                "Cannot find 'My lists'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath(folderXpath),
+                "Cannot find 'ReadLater' folder by '" + folderXpath + "'",
+                5
+        );
+        //2.Delete the first article
+        TimeUnit.SECONDS.sleep(3);
+        swipeElementToLeft(
+                By.xpath("//*[@text='Android (operating system)']"),
+                "Cannot find saved article"
+        );
+        waitForElementNotPresent(
+                By.xpath("//*[@text='Android (operating system)']"),
+                "Cannot delete saved article",
+                5
+        );
+        //3.To be sure that the second article is present 4.Go into it
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find a title of the article",
+                15
+        );
+        //4.Be sure that the title is matched
+        WebElement titleElement =  waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find a title of the article",
+                15
+        );
+        String articleTitle = titleElement.getAttribute("text");
+        Assert.assertEquals(
+                "We see unexpected title",
+                "Android version history",
+                articleTitle
+        );
 
+        System.out.println("Well done! The testSaveTwoArticleIntoOneFolder has been passed successfully!");
     }
 
-    @Test//Ex6
+    //@Test//Ex6
     public void testAssertTitle() throws InterruptedException {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -222,5 +365,26 @@ public class HomeWork {
             String defaultMessage = "An element '" + by.toString() + "' isn't present";
             throw new AssertionError(defaultMessage + " " + errorMessage);
         }
+    }
+    private WebElement waitForElementAndClear(By by, String errorMessage, long timeoutInSeconds){
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+        element.clear();
+        return element;
+    }
+    protected void swipeElementToLeft(By by, String errorMessage){
+        WebElement element = waitForElementPresent(by, errorMessage,10);
+        int leftX = element.getLocation().getX();
+        int rigthX = leftX + element.getSize().getWidth();
+        int upperY = element.getLocation().getY();
+        int lowerY = upperY + element.getSize().getHeight();
+        int middleY = (upperY + lowerY)/2;
+
+        TouchAction action = new TouchAction(driver);
+        action
+                .press(rigthX, middleY)
+                .waitAction(1000)
+                .moveTo(leftX, middleY)
+                .release()
+                .perform();
     }
 }
