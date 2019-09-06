@@ -1,5 +1,6 @@
 import lib.CoreTestCase;
 import lib.ui.MainPageObject;
+import lib.ui.SearchPageObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -17,23 +18,13 @@ public class FirstTest extends CoreTestCase{
 
     @Test //Find locator 'Search Wikipedia' and click on it. Type "Java" and wait result 'Object-oriented programming language'.
     public void testSearchByXpath(){
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        mainPageObject.waitForElementAndSendKey(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                "Java",
-                "Cannot find Search input",
-                5
-        );
-        mainPageObject.waitForElementPresent(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
-                15
-        );
-        System.out.println("Well done firstTest! Excellent!");
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.waitForSearchResult("Object-oriented programming language");
+
+        System.out.println("Well done! The testSearchByXpath has been passed successfully!");
     }
     @Test //Open app, click 'Search', click X, and check that we return on previous screen.
     public void testCancelSearchById(){
@@ -52,7 +43,7 @@ public class FirstTest extends CoreTestCase{
                 "X-button by ID is still present on the page",
                 5
         );
-        System.out.println("Well done testCancelSearch!");
+        System.out.println("Well done! The testCancelSearchById has been passed successfully!");
     }
 
     @Test //Clear element from the information that was filled in before
