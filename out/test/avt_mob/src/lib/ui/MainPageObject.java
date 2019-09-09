@@ -102,7 +102,7 @@ public class MainPageObject {
         int amountOfElement = getAmountOfElements(by);
         System.out.println("Number of elements on a page = " + amountOfElement);
         if(amountOfElement > 0){
-            String defaultMessage = "An element '" + by.toString() + "' support to be not present";
+            String defaultMessage = "An element '" + by.toString() + "' suppose to be not present";
             throw new AssertionError(defaultMessage + " " + errorMessage);
         }
     }
