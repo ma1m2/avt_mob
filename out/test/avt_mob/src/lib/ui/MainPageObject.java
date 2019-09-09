@@ -110,7 +110,4 @@ public class MainPageObject {
         WebElement element = waitForElementPresent(by,errorMessage,timeoutInSeconds);
         return element.getAttribute(attribute);
     }
-    public void rotateScreen(){
-        driver.rotate(ScreenOrientation.PORTRAIT);
-    }
 }

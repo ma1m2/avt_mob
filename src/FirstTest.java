@@ -3,8 +3,6 @@ import lib.ui.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.WebElement;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +24,7 @@ public class FirstTest extends CoreTestCase{
         System.out.println("Well done! The testSearchByXpath has been passed successfully!");
     }
     @Test //Open app, click 'Search', click X, and check that we return on previous screen.
-    public void testCancelSearchById(){//2_07; 4_04
+    public void testCancelSearch(){//2_07; 4_04
         SearchPageObject searchPageObject = new SearchPageObject(driver);
 
         searchPageObject.initSearchInput();
@@ -38,8 +36,17 @@ public class FirstTest extends CoreTestCase{
     }
 
     @Test //Clear element from the information that was filled in before
-    public void testClearSearch(){//2_09; 4-05
-        mainPageObject.waitForElementAndClick(
+    public void testClearSearch(){//2_09;
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clearInput();
+        searchPageObject.waitForCancelButtonToAppear();
+        searchPageObject.clickCancelSearch();
+        searchPageObject.waitForCancelButtonToDisappear();
+
+/*        mainPageObject.waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find 'Search Wikipedia' by id",
                 5
@@ -49,22 +56,22 @@ public class FirstTest extends CoreTestCase{
                 "Java",
                 "Cannot find Search input by xpath",
                 5
-        );
-        mainPageObject.waitForElementAndClear(
+        );*/
+/*        mainPageObject.waitForElementAndClear(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Cannot find Search input after clearing",
                 5
-        );
-        mainPageObject.waitForElementAndClick(
+        );*/
+/*        mainPageObject.waitForElementAndClick(
                 By.id("org.wikipedia:id/search_close_btn"),
                 "Cannot find X-button by id to cancel Search",
                 5
-        );
-        mainPageObject.waitForElementNotPresent(
+        );*/
+/*        mainPageObject.waitForElementNotPresent(
                 By.id("org.wikipedia:id/search_close_btn"),
                 "X-button by ID is still present on the page",
                 5
-        );
+        );*/
         System.out.println("Well done! The testClearSearch has been passed successfully!");
     }
 
@@ -129,7 +136,6 @@ public class FirstTest extends CoreTestCase{
 
     @Test//3_05; 4_07
     public void testAmountOfNotEmptySearch(){
-
         String searchLine = "Linkin Park discography";
         SearchPageObject searchPageObject = new SearchPageObject(driver);
 
@@ -151,6 +157,7 @@ public class FirstTest extends CoreTestCase{
 
         System.out.println("Well done! The testAmountOfNotEmptySearch has been passed successfully!");
     }
+
     @Test//3_06; 4_07
     public void testAmountOfEmptySearch() throws InterruptedException {
         String searchLine = "jzxcvbnmasd";//zxcvbnmasd//java
@@ -167,82 +174,38 @@ public class FirstTest extends CoreTestCase{
         System.out.println("Well done! The testAmountOfEmptySearch has been passed successfully!");
     }
 
-    @Test//3_07
+    @Test//3_07; 4_08
     public void testChangeScreenOrientationOnSearchResult(){
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        String searchLine = "Java";
-        mainPageObject.waitForElementAndSendKey(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                searchLine,
-                "Cannot find Search input",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find 'Object-oriented programming language' topic searching by " + searchLine,
-                15
-        );
-        String titleBeforeRotation = mainPageObject.waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Cannot find a title of the article",
-                15
-        );
-        driver.rotate(ScreenOrientation.LANDSCAPE);
-        String titleAfterRotation = mainPageObject.waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Cannot find a title of the article",
-                15
-        );
-        Assert.assertEquals(
-                "Article title has been exchange after rotation",
-                titleBeforeRotation,
-                titleAfterRotation
-        );
-        driver.rotate(ScreenOrientation.PORTRAIT);
-        String titleAfterSecondRotation = mainPageObject.waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Cannot find a title of the article",
-                15
-        );
-        Assert.assertEquals(
-                "Article title has been exchange after second rotation",
-                titleAfterRotation,
-                titleAfterSecondRotation
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickArticleBySubstring("Object-oriented programming language");
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+
+        String titleBeforeRotation = articlePageObject.getArticleTitle();
+        this.rotateScreenLandscape();
+        System.out.println("Screen orientation is " + driver.getOrientation().toString());
+
+        String titleAfterRotation = articlePageObject.getArticleTitle();
+        Assert.assertEquals("Article title has been exchange after rotation", titleBeforeRotation, titleAfterRotation);
+        this.rotateScreenPortrait();
+        System.out.println("Screen orientation is " + driver.getOrientation().toString());
+
+        String titleAfterSecondRotation = articlePageObject.getArticleTitle();
+        Assert.assertEquals("Article title has been exchange after second rotation", titleAfterRotation, titleAfterSecondRotation);
         System.out.println("Well done! The testChangeScreenOrientationOnSearchResult has been passed successfully!");
     }
 
-    @Test//3_08
+    @Test//3_08; 4_08
     public void testCheckSearchArticleInBackground(){
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        mainPageObject.waitForElementAndSendKey(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                "Java",
-                "Cannot find Search input",
-                5
-        );
-        mainPageObject.waitForElementPresent(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
-                15
-        );
-        driver.runAppInBackground(2);
-        mainPageObject.waitForElementPresent(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find 'Object-oriented programming language' after returning from background",
-                15
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.waitForSearchResult("Object-oriented programming language");
+        this.backgroundApp(2);
+        searchPageObject.waitForSearchResult("Object-oriented programming language");
 
         System.out.println("Well done! The testCheckSearchArticleInBackground has been passed successfully!");
     }

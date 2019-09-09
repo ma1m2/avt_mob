@@ -7,6 +7,7 @@ public class SearchPageObject extends MainPageObject{
     private static final String
         SEARCH_INIT_ELEMENT = "//*[contains(@text,'Search Wikipedia')]",
         SEARCH_INPUT = "//*[contains(@text,'Search…')]",
+        SEARCH_INPUT_ID = "org.wikipedia:id/search_src_text",
         SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
         SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",//Object-oriented programming language
         SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
@@ -46,11 +47,7 @@ public class SearchPageObject extends MainPageObject{
         this.waitForElementAndClick(By.xpath(searchResultXpath),"Cannot find and click search result with substring " + substring,10);
     }
     public int getAmountOfFoundArticles(String searchLine){
-        this.waitForElementPresent(
-                By.xpath(SEARCH_RESULT_ELEMENT),
-                "Cannot find cannot find anything by request: '" + searchLine + "'",
-                15
-        );
+        this.waitForElementPresent(By.xpath(SEARCH_RESULT_ELEMENT), "Cannot find cannot find anything by request: '" + searchLine + "'", 15);
         return this.getAmountOfElements(By.xpath(SEARCH_RESULT_ELEMENT));
     }
     public void waitForEmptyResultLabel(String searchLine){
@@ -61,10 +58,9 @@ public class SearchPageObject extends MainPageObject{
         );
     }
     public void assertThereIsNoResultSearch(String searchLine){
-        this.assertElementNotPresent(
-                By.xpath(SEARCH_RESULT_ELEMENT),
-                "We've found some results by the request: " + searchLine
-        );
+        this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We've found some results by the request: " + searchLine);
     }
-
+    public void clearInput(){
+        this.waitForElementAndClear(By.id(SEARCH_INPUT_ID),"Cannot find Search input after clearing",15);
+    }
 }
