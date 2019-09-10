@@ -1,17 +1,16 @@
 import lib.CoreTestCase;
 import lib.ui.*;
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
 import java.util.concurrent.TimeUnit;
 
 public class FirstTest extends CoreTestCase{
-    private MainPageObject mainPageObject;
+/*    private MainPageObject mainPageObject;
     protected void setUp() throws Exception {
         super.setUp();
         mainPageObject = new MainPageObject(driver);
-    }
+    }*/
 
     @Test //Find locator 'Search Wikipedia' and click on it. Type "Java" and wait result 'Object-oriented programming language'.
     public void testSearchByXpath(){//4_03
@@ -86,7 +85,7 @@ public class FirstTest extends CoreTestCase{
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
         String articleTitle = articlePageObject.getArticleTitle();
-        Assert.assertEquals(
+        assertEquals(
                 "We see unexpected title",
                 "Java (programming language)",
                 articleTitle
@@ -142,15 +141,15 @@ public class FirstTest extends CoreTestCase{
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);
 
-        String searchResultLocator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
-        mainPageObject.waitForElementPresent(
+/*        String searchResultLocator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
+        searchPageObject.waitForElementPresent(
                 By.xpath(searchResultLocator),
                 "Cannot find cannot find anything by request: '" + searchLine + "'",
                 15
-        );
+        );*/
         int amountOfSearchResult = searchPageObject.getAmountOfFoundArticles(searchLine);
         System.out.println("Number of elements on a page = " + amountOfSearchResult);
-        Assert.assertTrue(
+        assertTrue(
                 "We didn't find any result",
                 amountOfSearchResult > 0
         );
@@ -188,12 +187,12 @@ public class FirstTest extends CoreTestCase{
         System.out.println("Screen orientation is " + driver.getOrientation().toString());
 
         String titleAfterRotation = articlePageObject.getArticleTitle();
-        Assert.assertEquals("Article title has been exchange after rotation", titleBeforeRotation, titleAfterRotation);
+        assertEquals("Article title has been exchange after rotation", titleBeforeRotation, titleAfterRotation);
         this.rotateScreenPortrait();
         System.out.println("Screen orientation is " + driver.getOrientation().toString());
 
         String titleAfterSecondRotation = articlePageObject.getArticleTitle();
-        Assert.assertEquals("Article title has been exchange after second rotation", titleAfterRotation, titleAfterSecondRotation);
+        assertEquals("Article title has been exchange after second rotation", titleAfterRotation, titleAfterSecondRotation);
         System.out.println("Well done! The testChangeScreenOrientationOnSearchResult has been passed successfully!");
     }
 
