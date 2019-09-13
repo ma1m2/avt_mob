@@ -1,21 +1,21 @@
-package lib.ui;
+package homework.lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class MainPageObject {
+public class MainPageObj {
     protected AppiumDriver driver;
 
-    public MainPageObject(AppiumDriver driver) {
+    public MainPageObj(AppiumDriver driver) {
         this.driver = driver;
     }
+
     public WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -36,7 +36,6 @@ public class MainPageObject {
         element.sendKeys(value);
         return element;
     }
-
     public boolean waitForElementNotPresent(By by, String errorMessage, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -44,38 +43,22 @@ public class MainPageObject {
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
     }
+    public int getAmountOfElements(By by){
+        List elements = driver.findElements(by);
+        return elements.size();
+    }
+    public void assertElementPresent(By by, String errorMessage){
+        int amountOfElement = getAmountOfElements(by);
+        System.out.println("Number of elements on a page = " + amountOfElement);
+        if(amountOfElement != 1){
+            String defaultMessage = "An element '" + by.toString() + "' isn't present";
+            throw new AssertionError(defaultMessage + " " + errorMessage);
+        }
+    }
     public WebElement waitForElementAndClear(By by, String errorMessage, long timeoutInSeconds){
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.clear();
         return element;
-    }
-    public void swipeUp(int timeOfSwipe){
-        TouchAction action = new TouchAction(driver);
-        Dimension size = driver.manage().window().getSize();
-        int x = size.width/2;
-        int startY = (int) (size.height*0.8);//at the bottom of screen
-        int endY = (int) (size.height*0.2);//at the top of screen
-        action
-                .press(x, startY)
-                .waitAction(timeOfSwipe)
-                .moveTo(x, endY)
-                .release()
-                .perform();
-    }
-    public void swipeUpQuick(){
-        swipeUp(200);
-    }
-    public void swipeUpToFindElement(By by, String errorMessage, int maxSwipe){
-        int alreadySwipe = 0;
-        while (driver.findElements(by).size()==0){
-            if(alreadySwipe > maxSwipe){
-                waitForElementPresent(by, "Cannot find element by swiping Up. \n" + errorMessage,0);
-                System.out.println("Cannot find element by swiping Up. \n" + errorMessage);
-                return;
-            }
-            swipeUpQuick();
-            alreadySwipe++;
-        }
     }
     public void swipeElementToLeft(By by, String errorMessage){
         WebElement element = waitForElementPresent(by, errorMessage,10);
@@ -92,21 +75,5 @@ public class MainPageObject {
                 .moveTo(leftX, middleY)
                 .release()
                 .perform();
-    }
-    public int getAmountOfElements(By by){
-        List elements = driver.findElements(by);
-        return elements.size();
-    }
-    public void assertElementNotPresent(By by, String errorMessage){
-        int amountOfElement = getAmountOfElements(by);
-        System.out.println("Number of elements on a page = " + amountOfElement);
-        if(amountOfElement > 0){
-            String defaultMessage = "An element '" + by.toString() + "' suppose to be not present";
-            throw new AssertionError(defaultMessage + " " + errorMessage);
-        }
-    }
-    public String waitForElementAndGetAttribute(By by, String attribute, String errorMessage, long timeoutInSeconds){
-        WebElement element = waitForElementPresent(by,errorMessage,timeoutInSeconds);
-        return element.getAttribute(attribute);
     }
 }

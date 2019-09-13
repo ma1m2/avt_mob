@@ -51,7 +51,7 @@ public class ArticlePageObject extends MainPageObject {
         );
         this.waitForElementAndSendKey(
                 By.id(MY_LIST_INPUT),//"org.wikipedia:id/text_input"
-                "Learning programming",
+                nameOfFolder,//"Learning programming"
                 "Cannot find input to set name 'Learning programming'",
                 5
         );
