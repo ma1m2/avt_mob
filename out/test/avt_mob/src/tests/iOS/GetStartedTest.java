@@ -17,7 +17,7 @@ public class GetStartedTest extends iOSTestCase {
 
     welcomePageObject.waitForAddOrEditPreferredLangLink();
     welcomePageObject.clickNextButton();
-    
+
     welcomePageObject.waitForLearnMoreAboutDataCollectedLink();
     welcomePageObject.clickGetStartedtButton();
   }
