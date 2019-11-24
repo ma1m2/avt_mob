@@ -93,7 +93,7 @@ public class MainPageObject {
 
   public void swipeUpTillElementAppear(String locator, String errorMessage, int maxSwipe){
     int alreadySwipe = 0;
-    while (this.isElementLocatedOnTheScreen(locator)){
+    while (!this.isElementLocatedOnTheScreen(locator)){
       if(alreadySwipe > maxSwipe){
         Assert.assertTrue(errorMessage,this.isElementLocatedOnTheScreen(locator));
       }
@@ -101,8 +101,9 @@ public class MainPageObject {
       ++alreadySwipe;
     }
   }
+
   public boolean isElementLocatedOnTheScreen(String locator){
-    int elementLocationByY = this.waitForElementPresent(locator,"Cannot find element by locator '"+locator+"'",2).getLocation().getY();
+    int elementLocationByY = this.waitForElementPresent(locator,"Cannot find element by locator '"+locator+"'",1).getLocation().getY();
     int screenSizeByY = driver.manage().window().getSize().getHeight();
     return elementLocationByY < screenSizeByY;
   }

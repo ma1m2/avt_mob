@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase{
     @Test//3_03; 4_06
-    public void testSaveArticleToMyList() throws InterruptedException {
+    public void testSaveArticleToMyList(){
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();

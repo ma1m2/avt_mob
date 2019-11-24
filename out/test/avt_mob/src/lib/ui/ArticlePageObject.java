@@ -35,7 +35,6 @@ abstract public class ArticlePageObject extends MainPageObject {
         }else {
             this.swipeUpTillElementAppear(FOOTER_ELEMENT,"Cannot find the end of article",40);
         }
-
     }
     public void addArticleToMyList(String nameOfFolder){
         this.waitForElementAndClick(

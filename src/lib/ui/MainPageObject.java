@@ -19,8 +19,8 @@ public class MainPageObject {
     this.driver = driver;
   }
 
-  public WebElement waitForElementPresent(String locator, String errorMessage, long timeoutInSeconds){
-      By by = this.getLocatorByString(locator);
+  public WebElement waitForElementPresent(String locator, String errorMessage, long timeoutInSeconds) {
+    By by = this.getLocatorByString(locator);
     WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
     wait.withMessage(errorMessage + "\n");
     return wait.until(
@@ -28,11 +28,11 @@ public class MainPageObject {
     );
   }
 
-  public WebElement waitForElementPresent(String locator, String errorMessage){
+  public WebElement waitForElementPresent(String locator, String errorMessage) {
     return waitForElementPresent(locator, errorMessage, 5);
   }
 
-  public WebElement waitForElementAndClick(String locator, String errorMessage, long timeoutInSecond){
+  public WebElement waitForElementAndClick(String locator, String errorMessage, long timeoutInSecond) {
     WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSecond);
     element.click();
     return element;
@@ -45,7 +45,7 @@ public class MainPageObject {
   }
 
   public boolean waitForElementNotPresent(String locator, String errorMessage, long timeoutInSeconds) {
-      By by = this.getLocatorByString(locator);
+    By by = this.getLocatorByString(locator);
     WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
     wait.withMessage(errorMessage + "\n");
     return wait.until(
@@ -78,7 +78,7 @@ public class MainPageObject {
   }
 
   public void swipeUpToFindElement(String locator, String errorMessage, int maxSwipe) {
-      By by = this.getLocatorByString(locator);
+    By by = this.getLocatorByString(locator);
     int alreadySwipe = 0;
     while (driver.findElements(by).size() == 0) {
       if (alreadySwipe > maxSwipe) {
@@ -91,18 +91,19 @@ public class MainPageObject {
     }
   }
 
-  public void swipeUpTillElementAppear(String locator, String errorMessage, int maxSwipe){
+  public void swipeUpTillElementAppear(String locator, String errorMessage, int maxSwipe) {
     int alreadySwipe = 0;
-    while (this.isElementLocatedOnTheScreen(locator)){
-      if(alreadySwipe > maxSwipe){
-        Assert.assertTrue(errorMessage,this.isElementLocatedOnTheScreen(locator));
+    while (!this.isElementLocatedOnTheScreen(locator)) {
+      if (alreadySwipe > maxSwipe) {
+        Assert.assertTrue(errorMessage, this.isElementLocatedOnTheScreen(locator));
       }
       swipeUpQuick();
       ++alreadySwipe;
     }
   }
-  public boolean isElementLocatedOnTheScreen(String locator){
-    int elementLocationByY = this.waitForElementPresent(locator,"Cannot find element by locator '"+locator+"'",1).getLocation().getY();
+
+  public boolean isElementLocatedOnTheScreen(String locator) {
+    int elementLocationByY = this.waitForElementPresent(locator, "Cannot find element by locator '" + locator + "'", 1).getLocation().getY();
     int screenSizeByY = driver.manage().window().getSize().getHeight();
     return elementLocationByY < screenSizeByY;
   }
@@ -125,7 +126,7 @@ public class MainPageObject {
   }
 
   public int getAmountOfElements(String locator) {
-      By by = this.getLocatorByString(locator);
+    By by = this.getLocatorByString(locator);
     List elements = driver.findElements(by);
     return elements.size();
   }
@@ -149,11 +150,11 @@ public class MainPageObject {
     String byType = explodedLocator[0];
     String locator = explodedLocator[1];
     if (byType.equals("xpath")) {
-        return By.xpath(locator);
-    }else if (byType.equals("id")){
-        return By.id(locator);
-    }else {
-        throw new IllegalArgumentException("Cannot get type of locator. Locator: " + locatorWithType);
+      return By.xpath(locator);
+    } else if (byType.equals("id")) {
+      return By.id(locator);
+    } else {
+      throw new IllegalArgumentException("Cannot get type of locator. Locator: " + locatorWithType);
     }
   }
 }
