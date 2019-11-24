@@ -2,6 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.*;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -16,7 +17,7 @@ public class SearchTests extends CoreTestCase{
 
     @Test //Find locator 'Search Wikipedia' and click on it. Type "Java" and wait result 'Object-oriented programming language'.
     public void testSearchByXpath(){//4_03
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
@@ -27,7 +28,7 @@ public class SearchTests extends CoreTestCase{
 
     @Test //Open app, click 'Search', click X, and check that we return on previous screen.
     public void testCancelSearch(){//2_07; 4_04
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.waitForCancelButtonToAppear();
@@ -39,7 +40,7 @@ public class SearchTests extends CoreTestCase{
 
     @Test //Clear element from the information that was filled in before
     public void testClearSearch(){//2_09;
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
@@ -80,7 +81,7 @@ public class SearchTests extends CoreTestCase{
     @Test//3_05; 4_07
     public void testAmountOfNotEmptySearch(){
         String searchLine = "Linkin Park discography";
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);
@@ -97,7 +98,7 @@ public class SearchTests extends CoreTestCase{
     @Test//3_06; 4_07
     public void testAmountOfEmptySearch() throws InterruptedException {
         String searchLine = "jzxcvbnmasd";//zxcvbnmasd//java
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);
