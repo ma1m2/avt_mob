@@ -175,7 +175,7 @@ public class MainPageObject {
       throw new IllegalArgumentException("Cannot get type of locator. Locator: " + locatorWithType);
     }
   }
-  public void tabAnywher(int x, int y){
+  public void tapAnywhe(int x, int y){
     TouchAction action = new TouchAction(driver);
     action.tap(x,y).perform();
   }

@@ -2,11 +2,13 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import lib.Platform;
+import lib.ui.factories.MyListPageObjectFactory;
 import org.openqa.selenium.WebElement;
 
 abstract public class ArticlePageObject extends MainPageObject {
   protected static String
           TITLE,
+          TITLE_2,
           FOOTER_ELEMENT,
           OPTION_BUTTON,
           OPTION_ADD_TO_MY_LIST_BUTTON,
@@ -20,7 +22,10 @@ abstract public class ArticlePageObject extends MainPageObject {
   }
 
   public WebElement waitForTitleElement() {
-    return this.waitForElementPresent(TITLE, "Cannot article title on page", 15);
+    return this.waitForElementPresent(TITLE, "Cannot find article title on page", 15);
+  }
+  public WebElement waitForTitleSecondArticle() {
+    return this.waitForElementPresent(TITLE_2, "Cannot find second article title on page", 15);
   }
 
   public String getArticleTitle() {
@@ -80,6 +85,18 @@ abstract public class ArticlePageObject extends MainPageObject {
     this.waitForElementAndClick(
             CLOSE_ARTICLE_BUTTON,//"//android.widget.ImageButton[@content-desc='Navigate up']"
             "Cannot close article, cannot find X-link",
+            5
+    );
+  }
+  public void addSecondArticleToMyList() {
+    this.waitForElementAndClick(
+            OPTION_BUTTON,
+            "Cannot find button to open article options",
+            5
+    );
+    this.waitForElementAndClick(
+            OPTION_ADD_TO_MY_LIST_BUTTON,//"//*[@text='Add to reading list']"
+            "Cannot find option to add article to reading list",
             5
     );
   }

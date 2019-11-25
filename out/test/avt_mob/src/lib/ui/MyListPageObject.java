@@ -7,7 +7,6 @@ abstract public class MyListPageObject extends MainPageObject {
 
   protected static String
           FOLDER_BY_NAME_TMP,
-          CLOSE_OVERLAY,
           ARTICLE_BY_TITLE_TMP;//Java (programming language)
 
   public MyListPageObject(AppiumDriver driver) {
@@ -15,16 +14,25 @@ abstract public class MyListPageObject extends MainPageObject {
   }
 
   /*TEMPLATES*/
-  private String getFolderByNameTmp(String nameOfFolder) {
+  public String getFolderByNameTmp(String nameOfFolder) {
     return FOLDER_BY_NAME_TMP.replace("{FOLDER_NAME}", nameOfFolder);
   }
 
-  private String getArticleTitleByXpath(String articleTitle) {
+  public String getArticleTitleByXpath(String articleTitle) {
     return ARTICLE_BY_TITLE_TMP.replace("{TITLE}", articleTitle);
   }
   /*TEMPLATES*/
 
   public void openFolderByName(String nameFolder) {
+    String folderNameXpath = getFolderByNameTmp(nameFolder);
+    this.waitForElementAndClick(
+            //By.id("org.wikipedia:id/item_image_1"),//passed always
+            folderNameXpath,//failed sometimes
+            "Cannot find folder by name " + nameFolder,
+            5
+    );
+  }
+  public void clickFolderByName(String nameFolder) {
     String folderNameXpath = getFolderByNameTmp(nameFolder);
     this.waitForElementAndClick(
             //By.id("org.wikipedia:id/item_image_1"),//passed always
@@ -60,9 +68,11 @@ abstract public class MyListPageObject extends MainPageObject {
   }
 
   public void removeOverlay(){
-      this.tabAnywher(150,500);
+      this.tapAnywhe(150,500);
   }
-  public void closeOverlay() {//not work
-    this.waitForElementAndClick(CLOSE_OVERLAY, "Cannot find Overlay to close by xpath: " + CLOSE_OVERLAY, 5);
+
+  public void openSecondArticle(String articleTitle){
+    String articleXpath = this.getArticleTitleByXpath(articleTitle);
+    this.waitForElementAndClick(articleXpath, "Cannot find a title of the Second article", 15);
   }
 }

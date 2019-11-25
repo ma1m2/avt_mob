@@ -39,11 +39,68 @@ public class MyListsTests extends CoreTestCase {
 
     MyListPageObject myListPageObject = MyListPageObjectFactory.get(driver);
     if (Platform.getInstance().isAndroid()) {
-      myListPageObject.openFolderByName("Learning programming");
+      myListPageObject.openFolderByName(nameOfFolder);
     }
+
     myListPageObject.removeOverlay();
     myListPageObject.swipeArticleToDelete(articleTitle);
 
     System.out.println("Well done! The testSaveArticleToMyList has been passed successfully!");
+  }
+
+  @Test//6_lesson_HW_Ex11
+  public void testSaveTwoArticleIntoOneFolder(){
+    SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
+    searchPageObject.initSearchInput();
+    searchPageObject.typeSearchLine("Java");
+    searchPageObject.clickArticleBySubstring("Object-oriented programming language");
+
+    ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
+    articlePageObject.waitForTitleElement();
+    String articleTitle1 = articlePageObject.getArticleTitle();
+
+    if (Platform.getInstance().isAndroid()) {
+      articlePageObject.addArticleToMyList(nameOfFolder);
+    } else {
+      articlePageObject.addArticleToMySaved();
+    }
+    articlePageObject.closeArticle();
+
+    //1.Save the second article into the same folder 'ReadLater'
+    MyListPageObject myListPageObject = MyListPageObjectFactory.get(driver);
+    if (Platform.getInstance().isAndroid()) {
+      searchPageObject.initSearchInput();
+      searchPageObject.typeSearchLine("Java");
+    } else {
+      searchPageObject.repeatedSearchInput();
+    }
+    searchPageObject.clickArticleBySubstring("Java (software platform)");
+    articlePageObject.waitForTitleSecondArticle();
+    String articleTitle2 = "Java (software platform)";
+    if (Platform.getInstance().isAndroid()) {
+      articlePageObject.addSecondArticleToMyList();
+      myListPageObject.clickFolderByName(nameOfFolder);
+    } else {
+      articlePageObject.addArticleToMySaved();
+    }
+    articlePageObject.closeArticle();
+
+    NavigationUI navigationUI = NavigationUIFactory.get(driver);
+    navigationUI.clickMyLists();
+    if (Platform.getInstance().isAndroid()) {
+      myListPageObject.openFolderByName(nameOfFolder); //work sometimes
+      //myListPageOb.openFolderByImageID(); always work
+    }
+
+    //2.Delete the first article     //Java (programming language)
+    myListPageObject.removeOverlay();
+    myListPageObject.swipeArticleToDelete(articleTitle1);
+
+    //3.To be sure that the second article is present 4.Go into it
+    myListPageObject.openSecondArticle(articleTitle2);
+    //4.Be sure that the title is matched
+    assertEquals("We see unexpected title", "Java (software platform)", articleTitle2);
+
+    System.out.println("Well done! The testSaveTwoArticleIntoOneFolder has been passed successfully!");
   }
 }

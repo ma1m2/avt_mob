@@ -14,7 +14,8 @@ public class FolderTests extends CoreTests {
         String searchLine = "Android";
         searchPageOb.initSearchInput();
         searchPageOb.typeSearchLine(searchLine);
-        searchPageOb.clickArticleBySubstring("Open-source operating system for mobile devices created by Google");
+        searchPageOb.clickArticleBySubstring("Android (operating system)");
+                //("Open-source operating system for mobile devices created by Google");
 
         ArticlePageOb articlePageOb = new ArticlePageOb(driver);
         articlePageOb.waitForTitleElement();
